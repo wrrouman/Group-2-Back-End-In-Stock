@@ -1,7 +1,7 @@
 const express = require("express");
 var cors = require("cors");
 const app = express();
-const warehouseRoutes = require('./routes/Warehouse.js');
+const InStockRoutes = require('./routes/InStock.js');
 
 //configuration
 require('dotenv').config();
@@ -12,7 +12,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
 
-app.use("/", warehouseRoutes);
+app.use("/", InStockRoutes);
 
 app.listen(8080, function() {
     console.log("Server is running on 8080");
