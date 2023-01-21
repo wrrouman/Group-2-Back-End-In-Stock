@@ -135,6 +135,3 @@ router.post("/videos", (req, res) => {
 
 //exports the route to be used (similar to a component in react) on the server js index.js
 module.exports = router;
-
-
-module.exports = router;
