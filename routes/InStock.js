@@ -21,6 +21,14 @@ router.get("/warehouses", (req, res) => {
 });
 
 // GET a Single Warehouse
+router.get("/warehouses/:warehouseId", (req, res) => {
+    const warehouseId = req.params.warehouseId;
+    let allwarehouse_data = fs.readFileSync("data/warehouses.json");
+    let parse_allwarehouse_data = JSON.parse(allwarehouse_data);
+    //find details of Warehouse we want to delete
+    let currentWarehouseDetails = parse_allwarehouse_data.find(warehouse => warehouse.id === warehouseId);
+    res.json(currentWarehouseDetails);
+});
 
 // POST/CREATE a New Warehouse
 router.post("/warehouses", (req, res) => {
@@ -73,6 +81,20 @@ router.delete("/warehouses/:warehouseId", (req, res) => {
 // GET a Single Inventory Item
 
 // GET Inventories for a Given Warehouse
+router.get("/inventories/:warehouseId", (req, res) => {
+    const warehouseId = req.params.warehouseId;
+    const inventoriesId = req.params.inventoriesId;
+    let allinventory_data = fs.readFileSync("data/inventories.json");
+    let parse_allinventory_data = JSON.parse(allinventory_data);
+    
+    //find inventory items that belong to the same warehouse
+    let currentWarehouseDetails = parse_allinventory_data.filter(
+      (inventory) => inventory.warehouseID === warehouseId
+    );
+  
+    res.json(currentWarehouseDetails);
+  
+  });
 
 // POST/CREATE a New Inventory Item
 
@@ -182,7 +204,7 @@ router.delete("/inventories/:inventoriesId", (req, res) => {
   );
   //find index of item we want to delete
   let currentInventoryDetails_Index = parse_allinventory_data.findIndex(
-    (inventory) => inventory.id === inventory.Id
+    (inventory) => inventory.id === inventoriesId
   );
 
   //delete Item
@@ -191,7 +213,8 @@ router.delete("/inventories/:inventoriesId", (req, res) => {
   fs.writeFileSync("data/inventories.json", stringify_allinventory_data);
   res
     .status(201)
-    .send(`Deleted ${currentInventoryDetails.itemName} Successfully!`);
+    // .send(`Deleted ${currentInventoryDetails.itemName} Successfully!`);
+    .json(stringify_allinventory_data);
 });
 
 //exports the route to be used (similar to a component in react) on the server js index.js
