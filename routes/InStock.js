@@ -36,15 +36,16 @@ function readInventories() {
 
 // GET a Single Warehouse
 router.get("/warehouses/:warehouseid", (req, res) => {
-    const parse_allwarehouse_data = readWarehouse();
-    console.log(req.query);
-    // http://localhost:8080/warehouses2?warehouseid=2922c286-16cd-4d43-ab98-c79f698aeab0
-    console.log(req.params);
-    // http://localhost:8080/warehouses/2922c286-16cd-4d43-ab98-c79f698aeab0?order=placeholder
-    const singleWarehouse = parse_allwarehouse_data.filter(
+    const parseAllWarehouseData = readWarehouse();
+    const singleWarehouse = parseAllWarehouseData.filter(
         (warehouse) => warehouse.id === req.params.warehouseid
     );
-    res.json(singleWarehouse);
+    if (singleWarehouse) {
+        res.json(singleWarehouse);
+    }
+    else {
+        res.status(404).json({message: "Warehouse not found."});
+    }
 });
 
 // POST/CREATE a New Warehouse
@@ -104,32 +105,6 @@ router.delete("/warehouses/:warehouseId", (req, res) => {
 // GET List of all Inventory Items
 
 // GET a Single Inventory Item
-
-// GET Inventories for a Given Warehouse
-
-// POST/CREATE a New Inventory Item
-
-// PUT/PATCH/EDIT an Inventory Item
-
-// DELETE an Inventory Item
-
-//=======Grayson Workspace======
-
-// GET a Single Warehouse
-router.get("/warehouses/:warehouseid", (req, res) => {
-    const parseAllWarehouseData = readWarehouse();
-    // http://localhost:8080/warehouses2?warehouseid=2922c286-16cd-4d43-ab98-c79f698aeab0
-    const singleWarehouse = parseAllWarehouseData.filter(
-        (warehouse) => warehouse.id === req.params.warehouseid
-    );
-    if (singleWarehouse) {
-        res.json(singleWarehouse);
-    }
-    else {
-        res.status(404).json({message: "Warehouse not found."});
-    }
-});
-// GET a Single Inventory Item
 router.get("/inventory/:inventoryid", (req, res) => {
     const parseAllInventoryData = readInventories();
     const singleInventory = parseAllInventoryData.filter(
@@ -142,6 +117,8 @@ router.get("/inventory/:inventoryid", (req, res) => {
         res.status(404).json({message: "Inventory not found."});
     }
 });
+
+// GET Inventories for a Given Warehouse
 
 // POST/Create new inventory Item
 router.post("/inventory", (req, res) => {
@@ -172,5 +149,8 @@ router.put("/inventory/:inventoryid", (req, res) => {
         res.status(404).json({ message: "Inventory not found." });
     }
 });
+
+// DELETE an Inventory Item
+
 
 module.exports = router;
