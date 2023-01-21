@@ -117,6 +117,20 @@ router.get("/inventory/:inventoryid", (req, res) => {
 });
 
 // GET Inventories for a Given Warehouse
+router.get("/inventories/:warehouseId", (req, res) => {
+    const warehouseId = req.params.warehouseId;
+    const inventoriesId = req.params.inventoriesId;
+    let allinventory_data = fs.readFileSync("data/inventories.json");
+    let parse_allinventory_data = JSON.parse(allinventory_data);
+    
+    //find inventory items that belong to the same warehouse
+    let currentWarehouseDetails = parse_allinventory_data.filter(
+      (inventory) => inventory.warehouseID === warehouseId
+    );
+  
+    res.json(currentWarehouseDetails);
+  
+  });
 
 // POST/Create new inventory Item
 router.post("/inventory", (req, res) => {
@@ -187,22 +201,23 @@ router.delete("/inventories/:inventoriesId", (req, res) => {
     let allinventory_data = fs.readFileSync("data/inventories.json");
     let parse_allinventory_data = JSON.parse(allinventory_data);
 
-    //find details of Item we want to delete
-    let currentInventoryDetails = parse_allinventory_data.find(
-        (inventory) => inventory.id === inventoriesId
-    );
-    //find index of item we want to delete
-    let currentInventoryDetails_Index = parse_allinventory_data.findIndex(
-        (inventory) => inventory.id === inventory.Id
-    );
+  //find details of Item we want to delete
+  let currentInventoryDetails = parse_allinventory_data.find(
+    (inventory) => inventory.id === inventoriesId
+  );
+  //find index of item we want to delete
+  let currentInventoryDetails_Index = parse_allinventory_data.findIndex(
+    (inventory) => inventory.id === inventoriesId
+  );
 
-    //delete Item
-    parse_allinventory_data.splice(currentInventoryDetails_Index, 1);
-    let stringify_allinventory_data = JSON.stringify(parse_allinventory_data);
-    fs.writeFileSync("data/inventories.json", stringify_allinventory_data);
-    res.status(201).send(
-        `Deleted ${currentInventoryDetails.itemName} Successfully!`
-    );
+  //delete Item
+  parse_allinventory_data.splice(currentInventoryDetails_Index, 1);
+  let stringify_allinventory_data = JSON.stringify(parse_allinventory_data);
+  fs.writeFileSync("data/inventories.json", stringify_allinventory_data);
+  res
+    .status(201)
+    // .send(`Deleted ${currentInventoryDetails.itemName} Successfully!`);
+    .json(stringify_allinventory_data);
 });
 
 //exports the route to be used (similar to a component in react) on the server js index.js
